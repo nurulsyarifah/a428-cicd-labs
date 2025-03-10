@@ -26,5 +26,25 @@ pipeline {
                 sh './jenkins/scripts/kill.sh'
             }
         }
+        stage('Deploy') {
+            steps {
+                echo "Installing SCP in Container"
+                sh 'apt update && apt install -y openssh-client'
+
+                echo "Deploying React Apps to AWS EC2..."
+
+                sh 'ls -lah'
+                sh 'chmod 400 aws.pem'
+                sh '''
+                scp -o StrictHostKeyChecking=no -i aws.pem -r build ubuntu@3.80.80.254:/home/ubuntu/
+                ssh -o StrictHostKeyChecking=no -i aws.pem ubuntu@3.80.80.254 'ls -lah'
+                '''
+
+                echo "Deployment done! Move build folder to /var/www/html"
+                sh 'mv /var/www/html /var/www/html_default'
+                sh 'mv build /var/www/html'
+                sh 'ls -lah; ls -lah /var/www/html'
+            }
+        }
     }
 }
