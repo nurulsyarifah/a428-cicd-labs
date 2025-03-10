@@ -3,6 +3,7 @@ pipeline {
         docker {
             image 'node:lts-buster-slim'
             args '-p 3000:3000'
+            args '--user root'
         }
     }
     environment {
@@ -31,7 +32,7 @@ pipeline {
                 echo "Installing SCP in Container"
                 sh 'whoami'
                 sh 'cat /etc/*release'
-                sh 'sudo apt update && sudo apt install -y openssh-client'
+                sh 'apt update && apt install -y openssh-client'
 
                 echo "Deploying React Apps to AWS EC2..."
 
