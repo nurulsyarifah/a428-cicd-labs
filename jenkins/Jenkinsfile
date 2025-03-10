@@ -30,7 +30,8 @@ pipeline {
             steps {
                 echo "Installing SCP in Container"
                 sh 'whoami'
-                sh 'apk add openssh'
+                sh 'cat /etc/*release'
+                sh 'sudo apt update && sudo apt install -y openssh-client'
 
                 echo "Deploying React Apps to AWS EC2..."
 
