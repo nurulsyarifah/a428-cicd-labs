@@ -57,7 +57,9 @@ pipeline {
                 '''
 
                 echo "Test and restart nginx"
+                sh '''
                 ssh -o StrictHostKeyChecking=no -i aws.pem ubuntu@3.80.80.254 'nginx -t && systemctl restart nginx'
+                '''
 
             }
         }
