@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'node:lts-buster-slim'
+            image 'node:16-buster-slim'
             args '-p 3000:3000'
             args '--user root'
         }
@@ -23,6 +23,7 @@ pipeline {
         stage('Deliver') {
             steps {
                 sh './jenkins/scripts/deliver.sh'
+                sh 'ls -lah'
                 input message: 'Finished using the website? (Click "Proceed" to continue)'
                 sh './jenkins/scripts/kill.sh'
             }
@@ -47,7 +48,7 @@ pipeline {
                 sh '''
                 ssh -o StrictHostKeyChecking=no -i aws.pem ubuntu@3.80.80.254 "
                 pwd &&
-                ls -lah
+                ls -lah &&
                 sudo mv /var/www/html /var/www/html_default &&
                 sudo mv build /var/www/html &&
                 sudo ls -lah; sudo ls -lah /var/www/html &&
