@@ -51,12 +51,13 @@ pipeline {
                     ls -lah &&
                     sudo mv /var/www/html /var/www/html_default &&
                     sudo mv /home/ubuntu/build /var/www/html &&
+                    sudo chown root.root /var/www/html -Rf &&
                     sudo ls -lah; sudo ls -lah /var/www/html
                 "
                 '''
 
                 echo "Test and restart nginx"
-                sh 'nginx -t && systemctl restart nginx'
+                ssh -o StrictHostKeyChecking=no -i aws.pem ubuntu@3.80.80.254 'nginx -t && systemctl restart nginx'
 
             }
         }
