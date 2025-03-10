@@ -24,10 +24,23 @@ pipeline {
             steps {
                 sh './jenkins/scripts/deliver.sh'
                 sh 'ls -lah'
-                input message: 'Finished using the website? (Click "Proceed" to continue)'
+            }
+        }
+
+        stage('Manual Approval') {
+            steps {
+                script {
+                    def userInput = input(
+                        message: "Lanjutkan ke tahap Deploy?",
+                        ok: "Lanjutkan"
+                    )
+
+                    echo "User memilih untuk melanjutkan ke tahap Deploy!"
+                }
                 sh './jenkins/scripts/kill.sh'
             }
         }
+
         stage('Deploy') {
             steps {
                 echo "Installing SCP in Container"
