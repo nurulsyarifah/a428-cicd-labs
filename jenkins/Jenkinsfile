@@ -29,7 +29,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo "Installing SCP in Container"
-                sh 'apt update && apt install -y openssh-client'
+                sh 'whoami'
+                sh 'apk add openssh'
 
                 echo "Deploying React Apps to AWS EC2..."
 
@@ -41,9 +42,19 @@ pipeline {
                 '''
 
                 echo "Deployment done! Move build folder to /var/www/html"
-                sh 'mv /var/www/html /var/www/html_default'
-                sh 'mv build /var/www/html'
-                sh 'ls -lah; ls -lah /var/www/html'
+                sh '''
+                ssh -o StrictHostKeyChecking=no -i aws.pem ubuntu@3.80.80.254 "
+                pwd &&
+                ls -lah
+                sudo mv /var/www/html /var/www/html_default &&
+                sudo mv build /var/www/html &&
+                sudo ls -lah; sudo ls -lah /var/www/html &&
+                "
+                '''
+
+                echo "Test and restart nginx"
+                sh 'nginx -t && systemctl restart nginx'
+                
             }
         }
     }
