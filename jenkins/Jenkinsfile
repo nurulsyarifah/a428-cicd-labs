@@ -47,17 +47,17 @@ pipeline {
                 echo "Deployment done! Move build folder to /var/www/html"
                 sh '''
                 ssh -o StrictHostKeyChecking=no -i aws.pem ubuntu@3.80.80.254 "
-                pwd &&
-                ls -lah &&
-                sudo mv /var/www/html /var/www/html_default &&
-                sudo mv build /var/www/html &&
-                sudo ls -lah; sudo ls -lah /var/www/html &&
+                    pwd &&
+                    ls -lah &&
+                    sudo mv /var/www/html /var/www/html_default &&
+                    sudo mv /home/ubuntu/build /var/www/html &&
+                    sudo ls -lah; sudo ls -lah /var/www/html
                 "
                 '''
 
                 echo "Test and restart nginx"
                 sh 'nginx -t && systemctl restart nginx'
-                
+
             }
         }
     }
